@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spiritual_meter/src/presentation/widget/app_section_card.dart';
 
-import '../../core/constant.dart';
-import '../../data/database/database_helper.dart';
-import '../../data/model/activity_log.dart';
-import '../widget/home/timer_dialog.dart';
+import 'package:spiritual_meter/src/core/constant.dart';
+import 'package:spiritual_meter/src/data/database/database_helper.dart';
+import 'package:spiritual_meter/src/data/model/activity_log.dart';
+import 'package:spiritual_meter/src/presentation/widget/home/timer_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -239,17 +239,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Navegar a agregar registro (Inicio)')),
-                        );
-                      },
-                      child: const Text('Ver Estadisticas'),
-                    ),
-                  ),
+                  // Align(
+                  //   alignment: Alignment.centerRight,
+                  //   child: TextButton(
+                  //     onPressed: () {
+                  //       ScaffoldMessenger.of(context).showSnackBar(
+                  //         const SnackBar(content: Text('Navegar a agregar registro (Inicio)')),
+                  //       );
+                  //     },
+                  //     child: const Text('Ver Estadisticas'),
+                  //   ),
+                  // ),
                 ],
               ),
               // bottomButton: addRecordButton,

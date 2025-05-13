@@ -118,19 +118,20 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 8),
                 ],
               ),
-              bottomButton: TextButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Navegar a agregar registro (Inicio)'),
-                    ),
-                  );
-                  // Navigator.of(context).pop();
-                },
-                child: const Text('Agregar Registro'),
-              ),
+              // bottomButton: TextButton(
+              //   onPressed: () {
+              //     ScaffoldMessenger.of(context).showSnackBar(
+              //       const SnackBar(
+              //         content: Text('Navegar a agregar registro (Inicio)'),
+              //       ),
+              //     );
+              //     // Navigator.of(context).pop();
+              //   },
+              //   child: const Text('Agregar Registro'),
+              // ),
             ),
 
             AppSectionCard(
@@ -176,7 +177,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                             minChildSize: 0.2,
                             maxChildSize: 0.5,
                             expand: false,
-                            builder: (BuildContext context, ScrollController scrollController) {
+                            builder: (
+                              BuildContext context,
+                              ScrollController scrollController,
+                            ) {
                               return DayActivityBottomSheet(
                                 selectedDay: selectedDay,
                                 dbHelper: _dbHelper,

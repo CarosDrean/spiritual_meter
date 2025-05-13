@@ -45,11 +45,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Opcional: Puedes poner un único AppBar aquí si quieres que sea consistente en todas las páginas
-      // y no manejarlo en cada pantalla individualmente.
-      // appBar: AppBar(
-      //   title: Text(_appBarTitles[_selectedIndex]), // Título dinámico
-      // ),
       body: PageView(
         controller: _pageController,
         // Esto es importante para que el BottomNavigationBar se actualice
@@ -59,7 +54,7 @@ class _MainScreenState extends State<MainScreen> {
             _selectedIndex = index;
           });
         },
-        children: _screens, // Las pantallas que se mostrarán
+        children: _screens,
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[

@@ -15,10 +15,12 @@ class AppTheme {
       ),
 
       appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFFF2F2F7), // Transparente o muy claro como iOS
+        backgroundColor: Color(0xFFF2F2F7),
         foregroundColor: Colors.black,
         elevation: 0,
         centerTitle: true,
+        // scrolledUnderElevation: 5,
+        surfaceTintColor: Colors.blue,
         titleTextStyle: TextStyle(
           color: Colors.black,
           fontSize: 19,
