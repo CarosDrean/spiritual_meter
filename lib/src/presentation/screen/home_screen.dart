@@ -5,6 +5,7 @@ import 'package:spiritual_meter/src/presentation/widget/app_section_card.dart';
 import 'package:spiritual_meter/src/core/constant.dart';
 import 'package:spiritual_meter/src/data/database/database_helper.dart';
 import 'package:spiritual_meter/src/data/model/activity_log.dart';
+import 'package:spiritual_meter/src/presentation/widget/home/prayer_gauge.dart';
 import 'package:spiritual_meter/src/presentation/widget/home/timer_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,12 +24,37 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   String? _activeTimerType;
 
   final DatabaseHelper _dbHelper = DatabaseHelper();
+  Duration _todayPrayerDuration = Duration.zero;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _loadTimerState();
+    _loadDailyStatistics();
+  }
+
+  Future<void> _loadDailyStatistics() async {
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day, 0, 0, 0);
+    final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
+
+    final logs = await _dbHelper.getActivityLogsByDateRange(
+      startOfDay,
+      endOfDay,
+    );
+
+    Duration prayerToday = Duration.zero;
+
+    for (var log in logs) {
+      if (log.activityType == kActivityTypePrayer) {
+        prayerToday += Duration(seconds: log.durationInSeconds);
+      }
+    }
+
+    setState(() {
+      _todayPrayerDuration = prayerToday;
+    });
   }
 
   @override
@@ -164,6 +190,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                               _activeTimerType = "prayer";
                               _showTimerDialog(_currentStartSectionTitle, initialDuration: null);
                             } else {
+                              _loadDailyStatistics();
                               _resetTimerState();
                             }
                           });
@@ -216,23 +243,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(
-                    child: Container(
-                      width: 150, // Ancho del medidor
-                      height: 75, // Altura del medidor
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200, // Color de fondo del placeholder
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Gráfico de progreso\n(Placeholder)',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey.shade600),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+                  PrayerGauge(prayerTimeInSeconds: _todayPrayerDuration.inSeconds),
+                  const SizedBox(height: 30),
                   Text(
                     'Que pasa no has orado nada hoy, recuerda que el poder del cristiano está en la oración, ¡Ora y vencerás, ora y las cosas saldrán mejor, mucho mejor!',
                     style: Theme.of(context).textTheme.bodyMedium,
