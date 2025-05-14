@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         state == AppLifecycleState.detached) {
       _saveTimerState();
       if (_isBibleReadingOn || _isPrayerOn) {
-        Navigator.of(context).pop()
+        Navigator.of(context).pop();
       }
     } else if (state == AppLifecycleState.resumed) {
       _loadTimerState();
