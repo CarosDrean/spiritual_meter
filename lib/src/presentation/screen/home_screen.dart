@@ -65,8 +65,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive || state == AppLifecycleState.detached) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.detached) {
       _saveTimerState();
+      if (_isBibleReadingOn || _isPrayerOn) {
+        Navigator.of(context).pop()
+      }
     } else if (state == AppLifecycleState.resumed) {
       _loadTimerState();
     }
@@ -74,7 +79,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   Future<void> _saveTimerState() async {
     final prefs = await SharedPreferences.getInstance();
-    if ((_isPrayerOn || _isBibleReadingOn) && _timerStartTime != null && _activeTimerType != null) {
+    if ((_isPrayerOn || _isBibleReadingOn) &&
+        _timerStartTime != null &&
+        _activeTimerType != null) {
       prefs.setString('timerStartTime', _timerStartTime!.toIso8601String());
       prefs.setString('activeTimerType', _activeTimerType!);
     } else {
@@ -108,7 +115,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         });
 
         _showTimerDialog(
-          _activeTimerType == "prayer" ? 'Tiempo de Oración' : 'Tiempo de Lectura Bíblica',
+          _activeTimerType == "prayer"
+              ? 'Tiempo de Oración'
+              : 'Tiempo de Lectura Bíblica',
           initialDuration: elapsedTime,
         );
       } else {
@@ -133,30 +142,28 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(kAppName),
-      ),
+      appBar: AppBar(title: const Text(kAppName)),
       body: SingleChildScrollView(
         child: Column(
           children: [
             AppSectionCard(
               title: kPhraseTitle,
               content: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(12.0),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        "El espíritu a la verdad está dispuesto, pero la carne es débil.",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                        textAlign: TextAlign.center,
-                      ),
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                  ]
+                    child: Text(
+                      "El espíritu a la verdad está dispuesto, pero la carne es débil.",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
               ),
               bottomButton: TextButton(
                 onPressed: () {
@@ -175,7 +182,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   Row(
                     children: [
                       Expanded(
-                        child: Text(kPrayerText, style: Theme.of(context).textTheme.bodyMedium),
+                        child: Text(
+                          kPrayerText,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                       ),
                       const Spacer(),
                       Switch(
@@ -188,7 +198,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                               _currentStartSectionTitle = 'Tiempo de Oración';
                               _timerStartTime = DateTime.now();
                               _activeTimerType = "prayer";
-                              _showTimerDialog(_currentStartSectionTitle, initialDuration: null);
+                              _showTimerDialog(
+                                _currentStartSectionTitle,
+                                initialDuration: null,
+                              );
                             } else {
                               _loadDailyStatistics();
                               _resetTimerState();
@@ -210,7 +223,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   Row(
                     children: [
                       Expanded(
-                        child: Text(kBibleReadingText, style: Theme.of(context).textTheme.bodyMedium),
+                        child: Text(
+                          kBibleReadingText,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                       ),
                       const Spacer(),
                       Switch(
@@ -220,10 +236,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                             _isBibleReadingOn = value;
                             if (value) {
                               _isPrayerOn = false;
-                              _currentStartSectionTitle = 'Tiempo de Lectura Bíblica';
+                              _currentStartSectionTitle =
+                                  'Tiempo de Lectura Bíblica';
                               _timerStartTime = DateTime.now();
                               _activeTimerType = "bibleReading";
-                              _showTimerDialog(_currentStartSectionTitle, initialDuration: null);
+                              _showTimerDialog(
+                                _currentStartSectionTitle,
+                                initialDuration: null,
+                              );
                             } else {
                               _resetTimerState();
                             }
@@ -243,7 +263,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  PrayerGauge(prayerTimeInSeconds: _todayPrayerDuration.inSeconds),
+                  PrayerGauge(
+                    prayerTimeInSeconds: _todayPrayerDuration.inSeconds,
+                  ),
                   const SizedBox(height: 30),
                   Text(
                     'Que pasa no has orado nada hoy, recuerda que el poder del cristiano está en la oración, ¡Ora y vencerás, ora y las cosas saldrán mejor, mucho mejor!',
@@ -288,9 +310,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 durationInSeconds: finalDuration.inSeconds,
                 endTime: DateTime.now(),
               );
-              await _dbHelper.insertActivityLog(newLog); // ¡Guardar en la base de datos!
+              await _dbHelper.insertActivityLog(
+                newLog,
+              ); // ¡Guardar en la base de datos!
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Actividad guardada: ${_activeTimerType!}, ${finalDuration.inSeconds} segundos')),
+                SnackBar(
+                  content: Text(
+                    'Actividad guardada: ${_activeTimerType!}, ${finalDuration.inSeconds} segundos',
+                  ),
+                ),
               );
             }
             _resetTimerState();
