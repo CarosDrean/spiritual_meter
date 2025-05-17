@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spiritual_meter/main.dart';
 import 'package:spiritual_meter/src/data/model/activity_log.dart';
 import 'package:spiritual_meter/src/presentation/widget/app_section_card.dart';
 
@@ -52,10 +54,52 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive ||
         state == AppLifecycleState.detached) {
-      _saveTimerState();
+      _handlePause();
     } else if (state == AppLifecycleState.resumed) {
       _loadTimerState();
+      _cancelReminderNotification();
     }
+  }
+
+  void _handlePause() async {
+    _saveTimerState();
+    if (_isPrayerOn || _isBibleReadingOn) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      await _showReminderNotification();
+    }
+  }
+
+  Future<void> _showReminderNotification() async {
+    String title = '';
+    String body = '';
+
+    if (_isPrayerOn) {
+      title = 'Oración en curso';
+      body =
+          'No olvides retomar tu tiempo de oración. ¡Aún puedes conectarte con Dios!';
+    } else if (_isBibleReadingOn) {
+      title = 'Lectura bíblica en curso';
+      body = 'No olvides seguir leyendo la Palabra. ¡Tu espíritu lo necesita!';
+    }
+
+    await flutterLocalNotificationsPlugin.cancel(0);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      const NotificationDetails(
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _cancelReminderNotification() async {
+    await flutterLocalNotificationsPlugin.cancel(0);
   }
 
   Future<void> _loadPrayerToday() async {

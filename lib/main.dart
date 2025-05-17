@@ -1,11 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:spiritual_meter/src/core/constant.dart';
 import 'package:spiritual_meter/src/core/theme.dart';
 import 'package:spiritual_meter/src/presentation/screen/main_screen.dart';
 
-void main() {
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+Future<void> initNotifications() async {
+  const initializationSettings = InitializationSettings(
+    iOS: DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    ),
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin
+      >()
+      ?.requestPermissions(alert: true, badge: true, sound: true);
+}
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initNotifications();
   runApp(const MyApp());
 }
 
@@ -26,10 +49,7 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('en', ''),
-        Locale('es', ''),
-      ],
+      supportedLocales: const [Locale('en', ''), Locale('es', '')],
     );
   }
 }
