@@ -51,7 +51,11 @@ class _MonthlyCalendarViewState extends State<MonthlyCalendarView> {
     final Map<DateTime, Set<String>> newActivitiesByDay = {};
 
     for (var log in logs) {
-      final logDate = DateTime(log.endTime.year, log.endTime.month, log.endTime.day);
+      final logDate = DateTime(
+        log.endTime.year,
+        log.endTime.month,
+        log.endTime.day,
+      );
 
       newActivitiesByDay.putIfAbsent(logDate, () => {});
       newActivitiesByDay[logDate]!.add(log.activityType);
@@ -119,6 +123,7 @@ class _MonthlyCalendarViewState extends State<MonthlyCalendarView> {
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           fontWeight: FontWeight.bold,
+                          color: Theme.of(context).textTheme.bodySmall!.color,
                         ),
                       ),
                     ),
@@ -147,7 +152,8 @@ class _MonthlyCalendarViewState extends State<MonthlyCalendarView> {
 
             final normalizedDay = DateTime(day.year, day.month, day.day);
             final hasActivity = _activitiesByDay.containsKey(normalizedDay);
-            final Set<String> activityTypes = _activitiesByDay[normalizedDay] ?? {};
+            final Set<String> activityTypes =
+                _activitiesByDay[normalizedDay] ?? {};
 
             return GestureDetector(
               onTap: () {
@@ -158,10 +164,19 @@ class _MonthlyCalendarViewState extends State<MonthlyCalendarView> {
               child: Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: isToday ? Colors.blue.shade200 : null,
+                  color:
+                      isToday
+                          ? Theme.of(
+                            context,
+                          ).colorScheme.secondary.withAlpha(77)
+                          : Colors.transparent,
                   shape: BoxShape.circle,
                   border:
-                      isToday ? Border.all(color: Colors.blue.shade400) : null,
+                      isToday
+                          ? Border.all(
+                            color: Theme.of(context).colorScheme.secondary,
+                          )
+                          : null,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -172,8 +187,8 @@ class _MonthlyCalendarViewState extends State<MonthlyCalendarView> {
                       style: TextStyle(
                         color:
                             isToday
-                                ? Theme.of(context).colorScheme.primary
-                                : null,
+                                ? Theme.of(context).colorScheme.onSecondary
+                                : Theme.of(context).textTheme.bodyMedium?.color,
                         fontWeight:
                             isToday ? FontWeight.bold : FontWeight.normal,
                       ),
@@ -185,7 +200,9 @@ class _MonthlyCalendarViewState extends State<MonthlyCalendarView> {
                         children: [
                           ...activityTypes.map((activityType) {
                             return Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 1.5),
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 1.5,
+                              ),
                               width: 6,
                               height: 6,
                               decoration: BoxDecoration(

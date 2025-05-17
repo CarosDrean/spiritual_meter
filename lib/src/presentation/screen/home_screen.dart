@@ -172,8 +172,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     padding: const EdgeInsets.all(12.0),
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
+                      color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Theme.of(context).dividerColor),
                     ),
                     child: Text(
                       "El espíritu a la verdad está dispuesto, pero la carne es débil.",
