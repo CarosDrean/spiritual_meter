@@ -4,16 +4,19 @@ import 'package:flutter/material.dart';
 
 class PrayerGaugePainter extends CustomPainter {
   final double prayerTimeInMinutes;
+  final Color needleColor;
+  final Color pivotColor;
 
-  PrayerGaugePainter({required this.prayerTimeInMinutes});
+  PrayerGaugePainter({
+    required this.prayerTimeInMinutes,
+    required this.needleColor,
+    required this.pivotColor,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     // The center of the semi-circle will be at the bottom center of the drawing area
-    final Offset center = Offset(
-      size.width / 2,
-      size.height,
-    );
+    final Offset center = Offset(size.width / 2, size.height);
     final double radius = size.width / 2;
 
     final Color redColor = Colors.red;
@@ -72,16 +75,12 @@ class PrayerGaugePainter extends CustomPainter {
     final double needleLength = radius * 0.8;
     final Offset needleEndPoint = Offset(
       center.dx + needleLength * math.cos(needleAngle),
-      center.dy -
-          needleLength *
-              math.sin(
-                needleAngle,
-              ),
+      center.dy - needleLength * math.sin(needleAngle),
     );
 
     final Paint needlePaint =
         Paint()
-          ..color = Colors.black87
+          ..color = needleColor
           ..strokeCap = StrokeCap.round
           ..strokeWidth = 4.0;
 
@@ -89,7 +88,7 @@ class PrayerGaugePainter extends CustomPainter {
 
     final Paint pivotPaint =
         Paint()
-          ..color = Colors.black
+          ..color = pivotColor
           ..style = PaintingStyle.fill;
     canvas.drawCircle(center, 6.0, pivotPaint);
   }
@@ -109,6 +108,12 @@ class PrayerGauge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final needleColor =
+        brightness == Brightness.dark ? Colors.white70 : Colors.black87;
+    final pivotColor =
+        brightness == Brightness.dark ? Colors.white : Colors.black;
+
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -116,7 +121,11 @@ class PrayerGauge extends StatelessWidget {
         width: 220,
         height: 130,
         child: CustomPaint(
-          painter: PrayerGaugePainter(prayerTimeInMinutes: prayerTimeInMinutes),
+          painter: PrayerGaugePainter(
+            prayerTimeInMinutes: prayerTimeInMinutes,
+            needleColor: needleColor,
+            pivotColor: pivotColor,
+          ),
           size: Size.infinite,
         ),
       ),
