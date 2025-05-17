@@ -8,7 +8,7 @@ class AppTheme {
       primarySwatch: Colors.blue,
       primaryColor: const Color(0xFF4CAF50),
       scaffoldBackgroundColor: const Color(0xFFF2F2F7),
-      canvasColor: Colors.white, // Color de fondo para Cards, Dialogs
+      canvasColor: Colors.white,
 
       colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.blue,
@@ -24,37 +24,35 @@ class AppTheme {
         titleTextStyle: TextStyle(
           color: Colors.black,
           fontSize: 19,
-          fontWeight: FontWeight.w600, // Peso de fuente de iOS
+          fontWeight: FontWeight.w600,
           fontFamily: '.SF Pro Text',
         ),
       ),
 
       cardTheme: CardTheme(
-        elevation: 0, // Sin elevación
+        elevation: 0,
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: Colors.grey.shade300, width: 0.5), // Borde sutil
+          side: BorderSide(color: Colors.grey.shade300, width: 0.5),
         ),
-        color: Colors.white, // Fondo de las "tarjetas"
+        color: Colors.white,
       ),
 
-      // TextTheme: Estilo iOS (usando las propiedades de Cupertino si se desea)
       textTheme: const TextTheme(
         headlineMedium: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w700, color: Colors.black87, fontFamily: '.SF Pro Text'),
         titleLarge: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600, color: Colors.black87, fontFamily: '.SF Pro Text'),
         bodyMedium: TextStyle(fontSize: 16.0, color: Colors.black87, fontFamily: '.SF Pro Text'),
         bodySmall: TextStyle(fontSize: 14.0, color: Colors.black54, fontFamily: '.SF Pro Text'),
-        labelLarge: TextStyle(fontWeight: FontWeight.w600, fontFamily: '.SF Pro Text'), // Para botones
+        labelLarge: TextStyle(fontWeight: FontWeight.w600, fontFamily: '.SF Pro Text'),
       ),
 
-      // Switch: Cambiar el color activo
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return CupertinoColors.activeGreen; // Verde de iOS
+            return CupertinoColors.activeGreen;
           }
-          return Colors.grey.shade300; // Gris apagado
+          return Colors.grey.shade300;
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
@@ -66,15 +64,14 @@ class AppTheme {
 
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Colors.white,
-        selectedItemColor: Colors.blue, // Color activo de iOS
+        selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed, // Sin animación de cambio
+        type: BottomNavigationBarType.fixed,
         elevation: 1,
         selectedLabelStyle: const TextStyle(fontSize: 10, fontFamily: '.SF Pro Text'),
         unselectedLabelStyle: const TextStyle(fontSize: 10, fontFamily: '.SF Pro Text'),
       ),
 
-      // ElevatedButton & TextButton: Estilo iOS
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blue,
@@ -86,28 +83,26 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: Colors.blue, // Azul para botones de texto
+          foregroundColor: Colors.blue,
           textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: '.SF Pro Text'),
         ),
       ),
 
-      // Diálogos: Estilo iOS
       dialogTheme: DialogTheme(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         backgroundColor: Colors.white,
       ),
 
-      // Input Decoration (para campos de texto si los tuvieras)
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: CupertinoColors.systemGrey6, // Fondo de campo de texto iOS
+        fillColor: CupertinoColors.systemGrey6,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide.none, // Sin borde
+          borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.blue, width: 2.0), // Borde azul al enfocar
+          borderSide: BorderSide(color: Colors.blue, width: 2.0),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       ),
