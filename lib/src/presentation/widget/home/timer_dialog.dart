@@ -7,15 +7,15 @@ import 'package:spiritual_meter/src/core/constant.dart';
 typedef OnStopCallback = void Function(Duration finalDuration);
 
 class TimerDialog extends StatefulWidget {
-  final OnStopCallback onStop;
   final String title;
-  final Duration? initialDuration;
+  final DateTime startTime;
+  final OnStopCallback onStop;
 
   const TimerDialog({
     super.key,
-    required this.onStop,
     required this.title,
-    this.initialDuration,
+    required this.startTime,
+    required this.onStop,
   });
 
   @override
@@ -23,27 +23,25 @@ class TimerDialog extends StatefulWidget {
 }
 
 class _TimerDialogState extends State<TimerDialog> {
-  Timer? _timer;
-  Duration _duration = Duration.zero;
+  Timer? _ticker;
+  late Duration _elapsed;
 
   @override
   void initState() {
     super.initState();
-    _duration = widget.initialDuration ?? Duration.zero;
-    _startTimer();
+    _updateElapsed();
+    _ticker = Timer.periodic(const Duration(seconds: 1), (_) => _updateElapsed());
   }
 
-  void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        _duration = _duration + const Duration(seconds: 1);
-      });
+  void _updateElapsed() {
+    setState(() {
+      _elapsed = DateTime.now().difference(widget.startTime);
     });
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _ticker?.cancel();
     super.dispose();
   }
 
@@ -55,7 +53,7 @@ class _TimerDialogState extends State<TimerDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            formatDuration(_duration.inSeconds),
+            formatDuration(_elapsed.inSeconds),
             style: Theme.of(context).textTheme.displayLarge,
           ),
         ],
@@ -63,7 +61,7 @@ class _TimerDialogState extends State<TimerDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            widget.onStop(_duration);
+            widget.onStop(_elapsed);
             Navigator.of(context).pop();
           },
           child: const Text(kStopButtonText),

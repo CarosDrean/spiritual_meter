@@ -60,11 +60,6 @@ class DatabaseHelper {
     });
   }
 
-  Future<int> deleteActivityLog(int id) async {
-    final db = await database;
-    return await db.delete('activity_logs', where: 'id = ?', whereArgs: [id]);
-  }
-
   Future<List<ActivityLog>> getActivityLogsByDateRange(
     DateTime startDate,
     DateTime endDate,
@@ -84,6 +79,24 @@ class DatabaseHelper {
     });
   }
 
-  // Puedes añadir más métodos para consultas específicas si lo necesitas
-  // Future<List<ActivityLog>> getDailyLogs(DateTime date) async { ... }
+  Future<int> deleteActivityLog(int id) async {
+    final db = await database;
+    return await db.delete('activity_logs', where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<List<ActivityLog>> getDailyLogs(DateTime date) async {
+    final db = await database;
+    final String start = DateTime(date.year, date.month, date.day).toIso8601String();
+    final String end = DateTime(date.year, date.month, date.day, 23, 59, 59).toIso8601String();
+
+    final List<Map<String, dynamic>> maps = await db.query(
+      'activity_logs',
+      where: 'endTime >= ? AND endTime <= ?',
+      whereArgs: [start, end],
+      orderBy: 'endTime DESC',
+    );
+    return List.generate(maps.length, (i) {
+      return ActivityLog.fromMap(maps[i]);
+    });
+  }
 }
