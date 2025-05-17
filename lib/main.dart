@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:spiritual_meter/src/core/constant.dart';
 import 'package:spiritual_meter/src/core/theme.dart';
 import 'package:spiritual_meter/src/presentation/screen/main_screen.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -29,6 +30,7 @@ Future<void> initNotifications() async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initNotifications();
+  tz.initializeTimeZones();
   runApp(const MyApp());
 }
 

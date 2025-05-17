@@ -11,6 +11,7 @@ import 'package:spiritual_meter/src/core/constant.dart';
 import 'package:spiritual_meter/src/data/database/database_helper.dart';
 import 'package:spiritual_meter/src/presentation/widget/home/prayer_gauge.dart';
 import 'package:spiritual_meter/src/presentation/widget/home/timer_dialog.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -54,18 +55,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive ||
         state == AppLifecycleState.detached) {
-      _handlePause();
+      _saveTimerState();
+      if (_isPrayerOn || _isBibleReadingOn) {
+        _showReminderNotification();
+      }
     } else if (state == AppLifecycleState.resumed) {
       _loadTimerState();
       _cancelReminderNotification();
-    }
-  }
-
-  void _handlePause() async {
-    _saveTimerState();
-    if (_isPrayerOn || _isBibleReadingOn) {
-      await Future.delayed(const Duration(milliseconds: 500));
-      await _showReminderNotification();
     }
   }
 
@@ -84,10 +80,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
     await flutterLocalNotificationsPlugin.cancel(0);
 
-    await flutterLocalNotificationsPlugin.show(
-      0,
+    final scheduledDate = tz.TZDateTime.now(
+      tz.local,
+    ).add(const Duration(milliseconds: 500));
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      0, // id
       title,
       body,
+      scheduledDate,
       const NotificationDetails(
         iOS: DarwinNotificationDetails(
           presentAlert: true,
@@ -95,6 +96,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           presentSound: true,
         ),
       ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
   }
 
