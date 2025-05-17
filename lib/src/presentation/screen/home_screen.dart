@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spiritual_meter/src/data/model/activity_log.dart';
@@ -16,6 +18,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+  final Random _random = Random();
+
   bool _isPrayerOn = false;
   bool _isBibleReadingOn = false;
 
@@ -157,6 +161,22 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     });
   }
 
+  String getRandomMessage(List<String> messages) {
+    return messages[_random.nextInt(messages.length)];
+  }
+
+  String getPrayerMessage(double minutes) {
+    if (minutes == 0) {
+      return getRandomMessage(kNoPrayerMessages);
+    } else if (minutes < 30) {
+      return getRandomMessage(kRedMessages);
+    } else if (minutes < 60) {
+      return getRandomMessage(kYellowMessages);
+    } else {
+      return getRandomMessage(kGreenMessages);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -278,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   ),
                   const SizedBox(height: 30),
                   Text(
-                    'Que pasa no has orado nada hoy, recuerda que el poder del cristiano está en la oración, ¡Ora y vencerás, ora y las cosas saldrán mejor, mucho mejor!',
+                    getPrayerMessage(_todayPrayerDuration.inSeconds / 60),
                     style: Theme.of(context).textTheme.bodyMedium,
                     textAlign: TextAlign.center,
                   ),
