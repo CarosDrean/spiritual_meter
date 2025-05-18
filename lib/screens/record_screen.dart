@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:spiritual_meter/src/data/database/database_helper.dart';
-import 'package:spiritual_meter/src/data/model/activity_log.dart';
+import 'package:spiritual_meter/services/database_helper.dart';
+import 'package:spiritual_meter/models/activity_log.dart';
 import 'package:spiritual_meter/src/utils/formatters.dart';
 
 class RecordScreen extends StatefulWidget {
@@ -84,15 +84,6 @@ class _RecordScreenState extends State<RecordScreen> {
                   },
                   onDismissed: (direction) async {
                     await _dbHelper.deleteActivityLog(log.id!);
-
-                    // Mostrar un SnackBar de confirmación (opcional)
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Registro eliminado: ${log.activityType == "prayer" ? "Oración" : "Lectura Bíblica"}',
-                        ),
-                      ),
-                    );
 
                     // Recargar la lista para actualizar la UI (si _activityLogsFuture es una variable de estado)
                     // O si no usas FutureBuilder de esta forma, podrías remover el elemento localmente

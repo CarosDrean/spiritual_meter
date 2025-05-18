@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:spiritual_meter/src/presentation/screen/record_screen.dart';
-import 'package:spiritual_meter/src/presentation/screen/statistics_screen.dart';
+import 'package:spiritual_meter/screens/record_screen.dart';
+import 'package:spiritual_meter/screens/statistics_screen.dart';
 
-import 'home_screen.dart';
+import 'home/home_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

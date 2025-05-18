@@ -1,7 +1,7 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'package:spiritual_meter/src/data/model/activity_log.dart';
+import 'package:spiritual_meter/models/activity_log.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();

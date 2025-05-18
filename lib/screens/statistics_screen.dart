@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:spiritual_meter/src/core/constant.dart';
-import 'package:spiritual_meter/src/data/database/database_helper.dart';
+import 'package:spiritual_meter/services/database_helper.dart';
 import 'package:spiritual_meter/src/presentation/widget/day_activity_bottom_sheet.dart';
 import 'package:spiritual_meter/src/presentation/widget/statistic/weekly_chart_fl.dart';
 import 'package:spiritual_meter/src/utils/formatters.dart';

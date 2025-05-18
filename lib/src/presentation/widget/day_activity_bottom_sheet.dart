@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:spiritual_meter/src/core/constant.dart';
-import 'package:spiritual_meter/src/data/database/database_helper.dart';
+import 'package:spiritual_meter/services/database_helper.dart';
 import 'package:spiritual_meter/src/utils/formatters.dart';
 
 class DayActivityBottomSheet extends StatefulWidget {
