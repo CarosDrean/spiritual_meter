@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:spiritual_meter/src/utils/formatters.dart';
-import 'package:spiritual_meter/src/core/constant.dart';
+import 'package:spiritual_meter/utils/formatters.dart';
+import 'package:spiritual_meter/core/constant.dart';
 
 typedef OnStopCallback = void Function(Duration finalDuration);
 

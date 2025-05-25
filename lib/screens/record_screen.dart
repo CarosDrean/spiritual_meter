@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 import 'package:spiritual_meter/services/database_helper.dart';
 import 'package:spiritual_meter/models/activity_log.dart';
-import 'package:spiritual_meter/src/utils/formatters.dart';
+import 'package:spiritual_meter/utils/formatters.dart';
 
 class RecordScreen extends StatefulWidget {
   const RecordScreen({super.key});

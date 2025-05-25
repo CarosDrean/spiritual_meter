@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
-import 'package:spiritual_meter/screens/home/home_viewmodel.dart';
-import 'package:spiritual_meter/src/core/constant.dart';
-import 'package:spiritual_meter/src/core/theme.dart';
-import 'package:spiritual_meter/screens/main_screen.dart';
 import 'package:timezone/data/latest.dart' as tz;
+
+import 'package:spiritual_meter/screens/home/home_viewmodel.dart';
+import 'package:spiritual_meter/core/constant.dart';
+import 'package:spiritual_meter/core/theme.dart';
+import 'package:spiritual_meter/screens/main_screen.dart';
+import 'package:spiritual_meter/screens/statistics/statistics_viewmodel.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -34,8 +36,11 @@ void main() async {
   await initNotifications();
   tz.initializeTimeZones();
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => HomeViewModel(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => HomeViewModel()),
+        ChangeNotifierProvider(create: (_) => StatisticsViewModel()),
+      ],
       child: const MyApp(),
     ),
   );

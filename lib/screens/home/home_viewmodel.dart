@@ -1,11 +1,11 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
+
 import 'package:spiritual_meter/models/activity_log.dart';
 import 'package:spiritual_meter/services/database_helper.dart';
 import 'package:spiritual_meter/services/notification_service.dart';
 import 'package:spiritual_meter/services/preferences_service.dart';
-import 'package:spiritual_meter/src/core/constant.dart';
+import 'package:spiritual_meter/core/constant.dart';
 
 class HomeViewModel extends ChangeNotifier {
   final DatabaseHelper _dbHelper;
