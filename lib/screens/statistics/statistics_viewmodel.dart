@@ -14,6 +14,7 @@ class StatisticsViewModel extends ChangeNotifier {
   Duration selectedDayBibleReadingDuration = Duration.zero;
 
   DateTime focusedMonth = DateTime.now();
+  Map<DateTime, Set<String>> activitiesByDay = {};
 
   List<double> prayerTimesLast7Days = List.filled(7, 0.0);
   List<double> readingTimesLast7Days = List.filled(7, 0.0);
@@ -35,7 +36,9 @@ class StatisticsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<(Duration prayer, Duration bibleReading)> _getDurationsForDay(DateTime day) async {
+  Future<(Duration prayer, Duration bibleReading)> _getDurationsForDay(
+    DateTime day,
+  ) async {
     final logs = await dbHelper.getDailyLogs(day);
 
     Duration prayer = Duration.zero;
@@ -71,11 +74,41 @@ class StatisticsViewModel extends ChangeNotifier {
 
   void previousMonth() {
     focusedMonth = DateTime(focusedMonth.year, focusedMonth.month - 1, 1);
-    notifyListeners();
+    loadActiveDaysForMonth(focusedMonth);
   }
 
   void nextMonth() {
     focusedMonth = DateTime(focusedMonth.year, focusedMonth.month + 1, 1);
+    loadActiveDaysForMonth(focusedMonth);
+  }
+
+  Future<void> loadActiveDaysForMonth(DateTime month) async {
+    final firstDayOfMonth = DateTime(month.year, month.month, 1);
+    final lastDayOfMonth = DateTime(
+      month.year,
+      month.month + 1,
+      1,
+    ).subtract(const Duration(seconds: 1));
+
+    final logs = await dbHelper.getActivityLogsByDateRange(
+      firstDayOfMonth,
+      lastDayOfMonth,
+    );
+
+    final Map<DateTime, Set<String>> newActivitiesByDay = {};
+
+    for (var log in logs) {
+      final logDate = DateTime(
+        log.endTime.year,
+        log.endTime.month,
+        log.endTime.day,
+      );
+
+      newActivitiesByDay.putIfAbsent(logDate, () => {});
+      newActivitiesByDay[logDate]!.add(log.activityType);
+    }
+
+    activitiesByDay = newActivitiesByDay;
     notifyListeners();
   }
 

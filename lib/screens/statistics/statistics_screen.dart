@@ -28,6 +28,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     Future.microtask(() async {
       await viewModel.loadDailyStatistics();
       await viewModel.loadTimesLast7Days();
+      await viewModel.loadActiveDaysForMonth(viewModel.focusedMonth);
     });
   }
 
@@ -100,6 +101,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                       const SizedBox(height: 16),
                       MonthlyCalendarView(
                         focusedMonth: model.focusedMonth,
+                        activitiesByDay: model.activitiesByDay,
                         onDaySelected: (selectedDay) async {
                           await model.loadSelectedDayStatistics(selectedDay);
 

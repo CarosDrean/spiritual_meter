@@ -1,70 +1,18 @@
 import 'package:flutter/material.dart';
 
 import 'package:spiritual_meter/core/constant.dart';
-import 'package:spiritual_meter/services/database_helper.dart';
 
-class MonthlyCalendarView extends StatefulWidget {
+class MonthlyCalendarView extends StatelessWidget {
   final DateTime focusedMonth;
   final ValueChanged<DateTime>? onDaySelected;
+  final Map<DateTime, Set<String>> activitiesByDay;
 
   const MonthlyCalendarView({
     super.key,
     required this.focusedMonth,
+    required this.activitiesByDay,
     this.onDaySelected,
   });
-
-  @override
-  State<MonthlyCalendarView> createState() => _MonthlyCalendarViewState();
-}
-
-class _MonthlyCalendarViewState extends State<MonthlyCalendarView> {
-  final DatabaseHelper _dbHelper = DatabaseHelper();
-  Map<DateTime, Set<String>> _activitiesByDay = {};
-
-  @override
-  void initState() {
-    super.initState();
-    _loadActiveDaysForMonth(widget.focusedMonth);
-  }
-
-  @override
-  void didUpdateWidget(covariant MonthlyCalendarView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.focusedMonth != widget.focusedMonth) {
-      _loadActiveDaysForMonth(widget.focusedMonth);
-    }
-  }
-
-  Future<void> _loadActiveDaysForMonth(DateTime month) async {
-    final firstDayOfMonth = DateTime(month.year, month.month, 1);
-    final lastDayOfMonth = DateTime(
-      month.year,
-      month.month + 1,
-      1,
-    ).subtract(const Duration(seconds: 1));
-
-    final logs = await _dbHelper.getActivityLogsByDateRange(
-      firstDayOfMonth,
-      lastDayOfMonth,
-    );
-
-    final Map<DateTime, Set<String>> newActivitiesByDay = {};
-
-    for (var log in logs) {
-      final logDate = DateTime(
-        log.endTime.year,
-        log.endTime.month,
-        log.endTime.day,
-      );
-
-      newActivitiesByDay.putIfAbsent(logDate, () => {});
-      newActivitiesByDay[logDate]!.add(log.activityType);
-    }
-
-    setState(() {
-      _activitiesByDay = newActivitiesByDay;
-    });
-  }
 
   Color _getActivityColor(String activityType) {
     switch (activityType) {
@@ -79,25 +27,15 @@ class _MonthlyCalendarViewState extends State<MonthlyCalendarView> {
 
   @override
   Widget build(BuildContext context) {
-    final firstDayOfMonth = DateTime(
-      widget.focusedMonth.year,
-      widget.focusedMonth.month,
-      1,
-    );
+    final firstDayOfMonth = DateTime(focusedMonth.year, focusedMonth.month, 1);
     final daysInMonth =
-        DateTime(
-          widget.focusedMonth.year,
-          widget.focusedMonth.month + 1,
-          0,
-        ).day;
+        DateTime(focusedMonth.year, focusedMonth.month + 1, 0).day;
 
     final startWeekday = firstDayOfMonth.weekday % 7;
 
     final List<DateTime?> days = List.generate(startWeekday, (index) => null);
     for (int i = 1; i <= daysInMonth; i++) {
-      days.add(
-        DateTime(widget.focusedMonth.year, widget.focusedMonth.month, i),
-      );
+      days.add(DateTime(focusedMonth.year, focusedMonth.month, i));
     }
 
     const List<String> weekdays = [
@@ -151,14 +89,14 @@ class _MonthlyCalendarViewState extends State<MonthlyCalendarView> {
                 day.day == DateTime.now().day;
 
             final normalizedDay = DateTime(day.year, day.month, day.day);
-            final hasActivity = _activitiesByDay.containsKey(normalizedDay);
+            final hasActivity = activitiesByDay.containsKey(normalizedDay);
             final Set<String> activityTypes =
-                _activitiesByDay[normalizedDay] ?? {};
+                activitiesByDay[normalizedDay] ?? {};
 
             return GestureDetector(
               onTap: () {
-                if (widget.onDaySelected != null) {
-                  widget.onDaySelected!(day);
+                if (onDaySelected != null) {
+                  onDaySelected!(day);
                 }
               },
               child: Container(
