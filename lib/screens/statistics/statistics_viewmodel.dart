@@ -10,6 +10,9 @@ class StatisticsViewModel extends ChangeNotifier {
   Duration todayPrayerDuration = Duration.zero;
   Duration todayBibleReadingDuration = Duration.zero;
 
+  Duration selectedDayPrayerDuration = Duration.zero;
+  Duration selectedDayBibleReadingDuration = Duration.zero;
+
   DateTime focusedMonth = DateTime.now();
 
   List<double> prayerTimesLast7Days = List.filled(7, 0.0);
@@ -18,27 +21,27 @@ class StatisticsViewModel extends ChangeNotifier {
   StatisticsViewModel({DatabaseHelper? dbHelper})
     : dbHelper = dbHelper ?? DatabaseHelper();
 
-  List<DateTime> getLast7Days() {
-    final today = DateTime.now();
-    return List.generate(7, (index) {
-      return DateTime(today.year, today.month, today.day).subtract(Duration(days: index));
-    }).reversed.toList();
-  }
-
-  List<String> getLast7DaysLabels() {
-    final days = getLast7Days();
-    final formatter = DateFormat.E('es');
-    return days.map((d) => formatter.format(d)).toList();
+  Future<void> loadSelectedDayStatistics(DateTime selectedDay) async {
+    final (prayer, reading) = await _getDurationsForDay(selectedDay);
+    selectedDayPrayerDuration = prayer;
+    selectedDayBibleReadingDuration = reading;
+    notifyListeners();
   }
 
   Future<void> loadDailyStatistics() async {
-    final now = DateTime.now();
-    final logs = await dbHelper.getDailyLogs(now);
+    final (prayer, reading) = await _getDurationsForDay(DateTime.now());
+    todayPrayerDuration = prayer;
+    todayBibleReadingDuration = reading;
+    notifyListeners();
+  }
+
+  Future<(Duration prayer, Duration bibleReading)> _getDurationsForDay(DateTime day) async {
+    final logs = await dbHelper.getDailyLogs(day);
 
     Duration prayer = Duration.zero;
     Duration reading = Duration.zero;
 
-    for (final log in logs) {
+    for (var log in logs) {
       if (log.activityType == kActivityTypePrayer) {
         prayer += Duration(seconds: log.durationInSeconds);
       } else if (log.activityType == kActivityTypeBibleReading) {
@@ -46,9 +49,24 @@ class StatisticsViewModel extends ChangeNotifier {
       }
     }
 
-    todayPrayerDuration = prayer;
-    todayBibleReadingDuration = reading;
-    notifyListeners();
+    return (prayer, reading);
+  }
+
+  List<DateTime> getLast7Days() {
+    final today = DateTime.now();
+    return List.generate(7, (index) {
+      return DateTime(
+        today.year,
+        today.month,
+        today.day,
+      ).subtract(Duration(days: index));
+    }).reversed.toList();
+  }
+
+  List<String> getLast7DaysLabels() {
+    final days = getLast7Days();
+    final formatter = DateFormat.E('es');
+    return days.map((d) => formatter.format(d)).toList();
   }
 
   void previousMonth() {

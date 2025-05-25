@@ -100,7 +100,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                       const SizedBox(height: 16),
                       MonthlyCalendarView(
                         focusedMonth: model.focusedMonth,
-                        onDaySelected: (selectedDay) {
+                        onDaySelected: (selectedDay) async {
+                          await model.loadSelectedDayStatistics(selectedDay);
+
                           showModalBottomSheet(
                             context: context,
                             isScrollControlled: true,
@@ -116,7 +118,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                                 ) {
                                   return DayActivityBottomSheet(
                                     selectedDay: selectedDay,
-                                    dbHelper: model.dbHelper,
+                                    prayerDuration:
+                                        model.selectedDayPrayerDuration,
+                                    bibleReadingDuration:
+                                        model.selectedDayBibleReadingDuration,
                                     scrollController: scrollController,
                                   );
                                 },
