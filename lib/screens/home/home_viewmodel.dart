@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:spiritual_meter/models/activity_log.dart';
 import 'package:spiritual_meter/services/database_helper.dart';
@@ -9,6 +11,7 @@ class HomeViewModel extends ChangeNotifier {
   final DatabaseHelper _dbHelper;
   final NotificationService _notificationService;
   final PreferencesService _prefs = PreferencesService();
+  final Random _random = Random();
 
   HomeViewModel({
     DatabaseHelper? dbHelper,
@@ -43,6 +46,22 @@ class HomeViewModel extends ChangeNotifier {
     }
     todayPrayerDuration = prayerToday;
     notifyListeners();
+  }
+
+  String getRandomMessage(List<String> messages) {
+    return messages[_random.nextInt(messages.length)];
+  }
+
+  String getPrayerMessage(double minutes) {
+    if (minutes == 0) {
+      return getRandomMessage(kNoPrayerMessages);
+    } else if (minutes < 30) {
+      return getRandomMessage(kRedMessages);
+    } else if (minutes < 60) {
+      return getRandomMessage(kYellowMessages);
+    } else {
+      return getRandomMessage(kGreenMessages);
+    }
   }
 
   void startPrayerTimer() {

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +18,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   late HomeViewModel viewModel;
-  final Random _random = Random();
 
   @override
   void initState() {
@@ -54,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     } else if (state == AppLifecycleState.resumed) {
       viewModel.loadTimerState();
       viewModel.cancelReminderNotification();
+      viewModel.loadPrayerToday();
     }
   }
 
@@ -97,6 +95,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               );
               await viewModel.saveLog(newLog);
             }
+
+            if (viewModel.activeTimerType == kActivityTypePrayer) {
+              await viewModel.loadPrayerToday();
+            }
+
             viewModel.stopTimer();
             await viewModel.clearTimerState();
           },
@@ -105,22 +108,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     ).then((_) {
       viewModel.setDialogShowing(false);
     });
-  }
-
-  String getRandomMessage(List<String> messages) {
-    return messages[_random.nextInt(messages.length)];
-  }
-
-  String getPrayerMessage(double minutes) {
-    if (minutes == 0) {
-      return getRandomMessage(kNoPrayerMessages);
-    } else if (minutes < 30) {
-      return getRandomMessage(kRedMessages);
-    } else if (minutes < 60) {
-      return getRandomMessage(kYellowMessages);
-    } else {
-      return getRandomMessage(kGreenMessages);
-    }
   }
 
   @override
@@ -133,9 +120,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             child: Column(
               children: [
                 AppSectionCard(
-                  title: kPhraseTitle,
+                  title: 'Como voy',
                   content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      PrayerGauge(
+                        prayerTimeInSeconds:
+                        model.todayPrayerDuration.inSeconds,
+                      ),
+                      const SizedBox(height: 30),
                       Container(
                         padding: const EdgeInsets.all(12.0),
                         width: double.infinity,
@@ -147,22 +140,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           ),
                         ),
                         child: Text(
-                          "El espíritu a la verdad está dispuesto, pero la carne es débil.",
+                          model.getPrayerMessage(
+                            model.todayPrayerDuration.inMinutes.toDouble(),
+                          ),
                           style: Theme.of(context).textTheme.bodyMedium,
                           textAlign: TextAlign.center,
                         ),
                       ),
+                      const SizedBox(height: 16),
                     ],
-                  ),
-                  bottomButton: TextButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Agregar frase presionado'),
-                        ),
-                      );
-                    },
-                    child: const Text(kAddPhraseButtonText),
                   ),
                 ),
 
@@ -232,26 +218,39 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 ),
 
                 AppSectionCard(
-                  title: 'Como voy',
+                  title: kPhraseTitle,
                   content: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      PrayerGauge(
-                        prayerTimeInSeconds:
-                            model.todayPrayerDuration.inSeconds,
-                      ),
-                      const SizedBox(height: 30),
-                      Text(
-                        getPrayerMessage(
-                          model.todayPrayerDuration.inMinutes.toDouble(),
+                      Container(
+                        padding: const EdgeInsets.all(12.0),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: Theme.of(context).dividerColor,
+                          ),
                         ),
-                        style: Theme.of(context).textTheme.bodyMedium,
-                        textAlign: TextAlign.center,
+                        child: Text(
+                          "El espíritu a la verdad está dispuesto, pero la carne es débil.",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                      const SizedBox(height: 16),
                     ],
                   ),
+                  bottomButton: TextButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Agregar frase presionado'),
+                        ),
+                      );
+                    },
+                    child: const Text(kAddPhraseButtonText),
+                  ),
                 ),
+
                 const SizedBox(height: 20),
               ],
             ),

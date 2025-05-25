@@ -118,8 +118,8 @@ class PrayerGauge extends StatelessWidget {
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: SizedBox(
-        width: 220,
-        height: 130,
+        width: 200,
+        height: 110,
         child: CustomPaint(
           painter: PrayerGaugePainter(
             prayerTimeInMinutes: prayerTimeInMinutes,
