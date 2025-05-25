@@ -9,6 +9,7 @@ import 'package:spiritual_meter/core/constant.dart';
 import 'package:spiritual_meter/core/theme.dart';
 import 'package:spiritual_meter/screens/main_screen.dart';
 import 'package:spiritual_meter/screens/statistics/statistics_viewmodel.dart';
+import 'package:spiritual_meter/screens/records/records_viewmodel.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -40,6 +41,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => HomeViewModel()),
         ChangeNotifierProvider(create: (_) => StatisticsViewModel()),
+        ChangeNotifierProvider(create: (_) => RecordViewModel()),
       ],
       child: const MyApp(),
     ),

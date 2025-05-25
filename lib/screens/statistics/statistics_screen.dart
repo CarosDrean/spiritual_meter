@@ -7,8 +7,8 @@ import 'package:spiritual_meter/core/constant.dart';
 import 'package:spiritual_meter/screens/statistics/widgets/day_activity_bottom_sheet.dart';
 import 'package:spiritual_meter/screens/statistics/widgets/register.dart';
 import 'package:spiritual_meter/screens/statistics/widgets/weekly_chart_fl.dart';
-import 'package:spiritual_meter/widgets/app_section_card.dart';
 import 'package:spiritual_meter/screens/statistics/widgets/monthly_calendar_view.dart';
+import 'package:spiritual_meter/screens/widgets/app_section_card.dart';
 
 class StatisticsScreen extends StatefulWidget {
   const StatisticsScreen({super.key});
@@ -17,26 +17,18 @@ class StatisticsScreen extends StatefulWidget {
   State<StatisticsScreen> createState() => _StatisticsScreenState();
 }
 
-class _StatisticsScreenState extends State<StatisticsScreen>
-    with WidgetsBindingObserver {
+class _StatisticsScreenState extends State<StatisticsScreen> {
   late StatisticsViewModel viewModel;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     viewModel = context.read<StatisticsViewModel>();
 
     Future.microtask(() async {
       await viewModel.loadDailyStatistics();
       await viewModel.loadTimesLast7Days();
     });
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
   }
 
   @override

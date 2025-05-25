@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:spiritual_meter/models/activity_log.dart';
-import 'package:spiritual_meter/widgets/app_section_card.dart';
 import 'package:spiritual_meter/core/constant.dart';
 import 'package:spiritual_meter/screens/home/widgets/prayer_gauge.dart';
 import 'package:spiritual_meter/screens/home/widgets/timer_dialog.dart';
+import 'package:spiritual_meter/screens/widgets/app_section_card.dart';
 
 import 'home_viewmodel.dart';
 

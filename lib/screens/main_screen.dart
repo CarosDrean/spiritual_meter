@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spiritual_meter/screens/record_screen.dart';
+import 'package:spiritual_meter/screens/records/records_screen.dart';
 import 'package:spiritual_meter/screens/statistics/statistics_screen.dart';
 
 import 'home/home_screen.dart';
