@@ -7,6 +7,16 @@ class MonthlyCalendarView extends StatelessWidget {
   final ValueChanged<DateTime>? onDaySelected;
   final Map<DateTime, Set<String>> activitiesByDay;
 
+  static const List<String> weekdays = [
+    'dom',
+    'lun',
+    'mar',
+    'mié',
+    'jue',
+    'vie',
+    'sáb',
+  ];
+
   const MonthlyCalendarView({
     super.key,
     required this.focusedMonth,
@@ -37,16 +47,6 @@ class MonthlyCalendarView extends StatelessWidget {
     for (int i = 1; i <= daysInMonth; i++) {
       days.add(DateTime(focusedMonth.year, focusedMonth.month, i));
     }
-
-    const List<String> weekdays = [
-      'dom',
-      'lun',
-      'mar',
-      'mié',
-      'jue',
-      'vie',
-      'sáb',
-    ];
 
     return Column(
       children: [
