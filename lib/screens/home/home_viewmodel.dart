@@ -26,6 +26,8 @@ class HomeViewModel extends ChangeNotifier {
   String? _activeTimerType;
 
   Duration todayPrayerDuration = Duration.zero;
+  Duration todayBibleReadingDuration = Duration.zero;
+
   bool _isDialogShowing = false;
 
   DateTime? get timerStartTime => _timerStartTime;
@@ -34,17 +36,23 @@ class HomeViewModel extends ChangeNotifier {
 
   bool get isDialogShowing => _isDialogShowing;
 
-  Future<void> loadPrayerToday() async {
+  Future<void> loadRecordsToday() async {
     final now = DateTime.now();
     final logs = await _dbHelper.getDailyLogs(now);
 
     Duration prayerToday = Duration.zero;
+    Duration readingToday = Duration.zero;
+
     for (var log in logs) {
       if (log.activityType == kActivityTypePrayer) {
         prayerToday += Duration(seconds: log.durationInSeconds);
+      } else if (log.activityType == kActivityTypeBibleReading) {
+        readingToday += Duration(seconds: log.durationInSeconds);
       }
     }
+
     todayPrayerDuration = prayerToday;
+    todayBibleReadingDuration = readingToday;
     notifyListeners();
   }
 

@@ -6,6 +6,7 @@ import 'package:spiritual_meter/core/constant.dart';
 import 'package:spiritual_meter/screens/home/widgets/prayer_gauge.dart';
 import 'package:spiritual_meter/screens/home/widgets/timer_dialog.dart';
 import 'package:spiritual_meter/screens/widgets/app_section_card.dart';
+import 'package:spiritual_meter/screens/widgets/register.dart';
 
 import 'home_viewmodel.dart';
 
@@ -29,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       await viewModel.loadTimerState();
       showDialogOnInit();
 
-      viewModel.loadPrayerToday();
+      viewModel.loadRecordsToday();
     });
   }
 
@@ -51,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     } else if (state == AppLifecycleState.resumed) {
       viewModel.loadTimerState();
       viewModel.cancelReminderNotification();
-      viewModel.loadPrayerToday();
+      viewModel.loadRecordsToday();
     }
   }
 
@@ -96,9 +97,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               await viewModel.saveLog(newLog);
             }
 
-            if (viewModel.activeTimerType == kActivityTypePrayer) {
-              await viewModel.loadPrayerToday();
-            }
+            await viewModel.loadRecordsToday();
 
             viewModel.stopTimer();
             await viewModel.clearTimerState();
@@ -126,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     children: [
                       PrayerGauge(
                         prayerTimeInSeconds:
-                        model.todayPrayerDuration.inSeconds,
+                            model.todayPrayerDuration.inSeconds,
                       ),
                       const SizedBox(height: 30),
                       Container(
@@ -172,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                 model.startPrayerTimer();
                                 _showTimerDialog('Tiempo de Oración');
                               } else {
-                                model.loadPrayerToday();
+                                model.loadRecordsToday();
                                 model.stopTimer();
                                 await model.clearTimerState();
                               }
@@ -205,6 +204,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                 model.startBibleReadingTimer();
                                 _showTimerDialog('Tiempo de Lectura Bíblica');
                               } else {
+                                model.loadRecordsToday();
                                 model.stopTimer();
                                 await model.clearTimerState();
                               }
@@ -218,36 +218,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 ),
 
                 AppSectionCard(
-                  title: kPhraseTitle,
+                  title: 'Registro dia',
                   content: Column(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(12.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: Theme.of(context).dividerColor,
-                          ),
-                        ),
-                        child: Text(
-                          "El espíritu a la verdad está dispuesto, pero la carne es débil.",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          textAlign: TextAlign.center,
-                        ),
+                      Register(
+                        text: 'Tiempo orado:',
+                        duration: model.todayPrayerDuration,
                       ),
+                      const SizedBox(height: 8),
+                      Register(
+                        text: 'Tiempo lectura bíblica:',
+                        duration: model.todayBibleReadingDuration,
+                      ),
+                      const SizedBox(height: 8),
                     ],
-                  ),
-                  bottomButton: TextButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Agregar frase presionado'),
-                        ),
-                      );
-                    },
-                    child: const Text(kAddPhraseButtonText),
                   ),
                 ),
 

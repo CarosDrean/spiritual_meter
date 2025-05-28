@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:spiritual_meter/screens/statistics/statistics_viewmodel.dart';
 import 'package:spiritual_meter/core/constant.dart';
 import 'package:spiritual_meter/screens/statistics/widgets/day_activity_bottom_sheet.dart';
-import 'package:spiritual_meter/screens/statistics/widgets/register.dart';
+import 'package:spiritual_meter/screens/widgets/register.dart';
 import 'package:spiritual_meter/screens/statistics/widgets/weekly_chart_fl.dart';
 import 'package:spiritual_meter/screens/statistics/widgets/monthly_calendar_view.dart';
 import 'package:spiritual_meter/screens/widgets/app_section_card.dart';

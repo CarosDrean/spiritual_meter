@@ -27,7 +27,7 @@ class PrayerGaugePainter extends CustomPainter {
         Paint()
           ..style = PaintingStyle.stroke
           ..strokeCap = StrokeCap.round
-          ..strokeWidth = 40.0;
+          ..strokeWidth = 35.0;
 
     final double sectionSweepAngle = math.pi / 3; // 60 degrees
 
@@ -118,8 +118,8 @@ class PrayerGauge extends StatelessWidget {
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: SizedBox(
-        width: 200,
-        height: 110,
+        width: 180,
+        height: 100,
         child: CustomPaint(
           painter: PrayerGaugePainter(
             prayerTimeInMinutes: prayerTimeInMinutes,
