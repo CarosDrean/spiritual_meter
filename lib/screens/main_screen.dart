@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spiritual_meter/screens/records/records_screen.dart';
+import 'package:spiritual_meter/screens/settings/settings_screen.dart';
 import 'package:spiritual_meter/screens/statistics/statistics_screen.dart';
 
 import 'home/home_screen.dart';
@@ -19,6 +20,7 @@ class _MainScreenState extends State<MainScreen> {
     const HomeScreen(),
     const StatisticsScreen(),
     const RecordScreen(),
+    const SettingsScreen(),
   ];
 
   @override
@@ -47,8 +49,6 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: PageView(
         controller: _pageController,
-        // Esto es importante para que el BottomNavigationBar se actualice
-        // si el usuario desliza entre las páginas en lugar de tocar el icono
         onPageChanged: (index) {
           setState(() {
             _selectedIndex = index;
@@ -58,10 +58,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Inicio',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
           BottomNavigationBarItem(
             icon: Icon(Icons.bar_chart),
             label: 'Estadísticas',
@@ -69,6 +66,10 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month),
             label: 'Registro',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Configuración',
           ),
         ],
         currentIndex: _selectedIndex,
