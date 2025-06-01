@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import 'package:spiritual_meter/core/constant.dart';
 import 'package:spiritual_meter/screens/records/records_viewmodel.dart';
 import 'package:spiritual_meter/models/activity_log.dart';
 import 'package:spiritual_meter/utils/formatters.dart';
@@ -15,6 +16,9 @@ class RecordScreen extends StatefulWidget {
 
 class _RecordScreenState extends State<RecordScreen> {
   late RecordViewModel viewModel;
+
+  final dateHeaderFormat = DateFormat('EEEE dd/MM/yyyy', 'es');
+  final timeFormat = DateFormat('HH:mm');
 
   @override
   void initState() {
@@ -46,76 +50,94 @@ class _RecordScreenState extends State<RecordScreen> {
   }
 
   Widget _buildList(List<ActivityLog> logs) {
-    final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
-    final viewModel = context.read<RecordViewModel>();
+    final groupedLogs = viewModel.groupLogsByDay(logs);
 
-    return ListView.builder(
-      itemCount: logs.length,
-      itemBuilder: (context, index) {
-        final log = logs[index];
+    return ListView(
+      children:
+          groupedLogs.entries.map((entry) {
+            final date = entry.key;
+            final logsForDay = entry.value;
 
-        return Dismissible(
-          key: Key(log.id!.toString()),
-          direction: DismissDirection.endToStart,
-          background: Container(
-            color: Colors.red,
-            alignment: Alignment.centerRight,
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: const Icon(Icons.delete, color: Colors.white),
-          ),
-          confirmDismiss: (_) async {
-            return await showDialog<bool>(
-              context: context,
-              builder:
-                  (_) => AlertDialog(
-                    title: const Text("Confirmar Eliminación"),
-                    content: const Text("¿Eliminar este registro?"),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(false),
-                        child: const Text("Cancelar"),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(true),
-                        child: const Text("Eliminar"),
-                      ),
-                    ],
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 12.0,
                   ),
-            );
-          },
-          onDismissed: (_) {
-            viewModel.deleteActivity(log.id!);
-          },
-          child: Card(
-            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Tipo: ${log.activityType == "prayer" ? "Oración" : "Lectura Bíblica"}',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Duración: ${formatDuration(log.durationInSeconds)}',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Fecha: ${dateFormat.format(log.endTime)}',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
+                  child: Text(
+                    viewModel.capitalize(dateHeaderFormat.format(date)),
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                 ),
-              ),
-            ),
-          ),
-        );
-      },
+                ...logsForDay.map(
+                  (log) => Dismissible(
+                    key: Key(log.id!.toString()),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: const Icon(Icons.delete, color: Colors.white),
+                    ),
+                    confirmDismiss: (_) async {
+                      return await showDialog<bool>(
+                        context: context,
+                        builder:
+                            (_) => AlertDialog(
+                              title: const Text("Confirmar Eliminación"),
+                              content: const Text("¿Eliminar este registro?"),
+                              actions: [
+                                TextButton(
+                                  onPressed:
+                                      () => Navigator.of(context).pop(false),
+                                  child: const Text("Cancelar"),
+                                ),
+                                TextButton(
+                                  onPressed:
+                                      () => Navigator.of(context).pop(true),
+                                  child: const Text("Eliminar"),
+                                ),
+                              ],
+                            ),
+                      );
+                    },
+                    onDismissed: (_) {
+                      viewModel.deleteActivity(log.id!);
+                    },
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Tipo: ${log.activityType == kActivityTypePrayer ? "Oración" : "Lectura Bíblica"}',
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Duración: ${formatDuration(log.durationInSeconds)}',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Hora: ${timeFormat.format(log.endTime)}',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }).toList(),
     );
   }
 }
