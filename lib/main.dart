@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:provider/provider.dart';
-import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
+import 'package:spiritual_meter/services/notification_service.dart';
+import 'package:spiritual_meter/screens/settings/settings_viewmodel.dart';
 import 'package:spiritual_meter/screens/home/home_viewmodel.dart';
 import 'package:spiritual_meter/core/constant.dart';
 import 'package:spiritual_meter/core/theme.dart';
@@ -11,37 +15,36 @@ import 'package:spiritual_meter/screens/main_screen.dart';
 import 'package:spiritual_meter/screens/statistics/statistics_viewmodel.dart';
 import 'package:spiritual_meter/screens/records/records_viewmodel.dart';
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+Future<void> _configureLocalTimezone() async {
+  tz.initializeTimeZones();
 
-Future<void> initNotifications() async {
-  const initializationSettings = InitializationSettings(
-    iOS: DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    ),
-  );
+  String? timeZoneName;
+  try {
+    timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
+    print('Detected local timezone: $timeZoneName');
+  } on PlatformException {
+    timeZoneName = 'America/Lima';
+  }
 
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin
-      >()
-      ?.requestPermissions(alert: true, badge: true, sound: true);
+  try {
+    tz.setLocalLocation(tz.getLocation(timeZoneName));
+  } catch (e) {
+    tz.setLocalLocation(tz.UTC);
+  }
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initNotifications();
-  tz.initializeTimeZones();
+  await _configureLocalTimezone();
+  await NotificationService().init();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => HomeViewModel()),
         ChangeNotifierProvider(create: (_) => StatisticsViewModel()),
         ChangeNotifierProvider(create: (_) => RecordViewModel()),
+        ChangeNotifierProvider(create: (_) => SettingsViewModel()),
       ],
       child: const MyApp(),
     ),

@@ -3,7 +3,91 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
-  final _plugin = FlutterLocalNotificationsPlugin();
+  static final NotificationService _notificationService =
+      NotificationService._internal();
+
+  factory NotificationService() {
+    return _notificationService;
+  }
+
+  NotificationService._internal();
+
+  final FlutterLocalNotificationsPlugin _plugin =
+      FlutterLocalNotificationsPlugin();
+
+  Future<void> init() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const DarwinInitializationSettings initializationSettingsDarwin =
+        DarwinInitializationSettings(
+          requestAlertPermission: true,
+          requestBadgePermission: true,
+          requestSoundPermission: true,
+        );
+
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsDarwin,
+        );
+
+    await _plugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+      onDidReceiveBackgroundNotificationResponse:
+          onDidReceiveBackgroundNotificationResponse,
+    );
+
+    final AndroidFlutterLocalNotificationsPlugin? androidPlugin =
+        _plugin
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >();
+
+    if (androidPlugin != null) {
+      if (await androidPlugin.areNotificationsEnabled() == false) {
+        await androidPlugin.requestNotificationsPermission();
+      }
+      if (await androidPlugin.canScheduleExactNotifications() == false) {
+        await androidPlugin.requestExactAlarmsPermission();
+      }
+    }
+
+    await _plugin
+        .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin
+        >()
+        ?.requestPermissions(alert: true, badge: true, sound: true);
+  }
+
+  static void onDidReceiveNotificationResponse(
+    NotificationResponse notificationResponse,
+  ) {
+    final String? payload = notificationResponse.payload;
+    if (notificationResponse.payload != null) {
+      debugPrint('notification payload: $payload');
+    }
+    // Lógica para manejar el toque de la notificación cuando la app está en primer plano
+    // Aquí puedes usar una clave global para navegar, o un NavigatorService.
+    // Ejemplo:
+    // if (payload != null) {
+    //   MyApp.navigatorKey.currentState?.pushNamed('/details', arguments: payload);
+    // }
+  }
+
+  @pragma('vm:entry-point')
+  static void onDidReceiveBackgroundNotificationResponse(
+    NotificationResponse notificationResponse,
+  ) {
+    final String? payload = notificationResponse.payload;
+    if (notificationResponse.payload != null) {
+      debugPrint('notification background payload: $payload');
+    }
+    // Lógica para manejar el toque de la notificación cuando la app está en segundo plano/terminada
+    // Nota: No puedes acceder directamente al contexto de Flutter UI aquí.
+    // Si necesitas navegación, usa rutas con nombres y NavigatorKey global, o una función de aislamiento.
+  }
 
   Future<void> showReminder(String title, String body) async {
     await _plugin.cancel(0);

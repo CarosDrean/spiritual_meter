@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 
-class StaticNotificationSetting {
+class NotificationSetting {
   final String id;
   final String type;
+  final String label;
   TimeOfDay timeOfDay;
   bool isEnabled;
-  final String label;
 
-  StaticNotificationSetting({
+  NotificationSetting({
     required this.id,
     required this.type,
+    required this.label,
     required this.timeOfDay,
     this.isEnabled = true,
-    required this.label,
   });
 
-  StaticNotificationSetting copyWith({
+  NotificationSetting copyWith({
     bool? isEnabled,
     TimeOfDay? timeOfDay,
   }) {
-    return StaticNotificationSetting(
+    return NotificationSetting(
       id: id,
       type: type,
       timeOfDay: timeOfDay ?? this.timeOfDay,
@@ -39,8 +39,8 @@ class StaticNotificationSetting {
     };
   }
 
-  factory StaticNotificationSetting.fromJson(Map<String, dynamic> json) {
-    return StaticNotificationSetting(
+  factory NotificationSetting.fromJson(Map<String, dynamic> json) {
+    return NotificationSetting(
       id: json['id'],
       type: json['type'],
       timeOfDay: TimeOfDay(hour: json['hour'], minute: json['minute']),
