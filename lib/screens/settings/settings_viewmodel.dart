@@ -5,34 +5,30 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spiritual_meter/core/constant.dart';
 import 'package:spiritual_meter/models/notification_setting.dart';
 import 'package:spiritual_meter/services/notification_service.dart';
+import 'package:spiritual_meter/services/preferences_service.dart';
 
 class SettingsViewModel extends ChangeNotifier {
   final NotificationService _notificationService = NotificationService();
+  final PreferencesService _prefsService = PreferencesService();
+
   List<NotificationSetting> _notifications = [];
 
   List<NotificationSetting> get notifications =>
       List.unmodifiable(_notifications);
 
-  static const String _notificationsKey = 'staticNotifications';
-
   SettingsViewModel() {}
 
   Future<void> loadNotifications() async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonStr = prefs.getString(_notificationsKey);
+    final loaded = await _prefsService.loadNotifications();
 
-    List<NotificationSetting> loaded;
-    if (jsonStr != null) {
-      final List<dynamic> jsonList = jsonDecode(jsonStr);
-      loaded = jsonList.map((e) => NotificationSetting.fromJson(e)).toList();
+    if (loaded != null && loaded.isNotEmpty) {
+      _notifications = loaded;
     } else {
-      loaded = _getDefaultNotifications();
+      _notifications = _getDefaultNotifications();
     }
 
-    _notifications = loaded;
     _sort();
     notifyListeners();
-    await _saveNotifications();
     _programAllNotifications();
   }
 
@@ -76,11 +72,7 @@ class SettingsViewModel extends ChangeNotifier {
   }
 
   Future<void> _saveNotifications() async {
-    final prefs = await SharedPreferences.getInstance();
-    final json = jsonEncode(
-      _notifications.map((n) => n.toJson()).toList(),
-    );
-    await prefs.setString(_notificationsKey, json);
+    await _prefsService.saveNotifications(_notifications);
   }
 
   Future<void> _programAllNotifications() async {
