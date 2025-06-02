@@ -32,7 +32,7 @@ class AppTheme {
 
       cardTheme: CardThemeData(
         elevation: 0,
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: const EdgeInsets.symmetric(vertical: 6),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: BorderSide(color: Colors.grey.shade300, width: 0.5),
@@ -43,6 +43,7 @@ class AppTheme {
       textTheme: const TextTheme(
         headlineMedium: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w700, color: Colors.black87, fontFamily: '.SF Pro Text'),
         titleLarge: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600, color: Colors.black87, fontFamily: '.SF Pro Text'),
+        titleMedium: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, color: Colors.black87, fontFamily: '.SF Pro Text'),
         bodyMedium: TextStyle(fontSize: 16.0, color: Colors.black87, fontFamily: '.SF Pro Text'),
         bodySmall: TextStyle(fontSize: 14.0, color: Colors.black54, fontFamily: '.SF Pro Text'),
         labelLarge: TextStyle(fontWeight: FontWeight.w600, fontFamily: '.SF Pro Text'),
@@ -140,7 +141,7 @@ class AppTheme {
 
       cardTheme: CardThemeData(
         elevation: 0,
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: const EdgeInsets.symmetric(vertical: 8),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: BorderSide(color: Colors.grey.shade700, width: 0.5),
@@ -151,6 +152,7 @@ class AppTheme {
       textTheme: const TextTheme(
         headlineMedium: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w700, color: Colors.white, fontFamily: '.SF Pro Text'),
         titleLarge: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600, color: Colors.white, fontFamily: '.SF Pro Text'),
+        titleMedium: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, color: Colors.white, fontFamily: '.SF Pro Text'),
         bodyMedium: TextStyle(fontSize: 16.0, color: Colors.white70, fontFamily: '.SF Pro Text'),
         bodySmall: TextStyle(fontSize: 14.0, color: Colors.white54, fontFamily: '.SF Pro Text'),
         labelLarge: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontFamily: '.SF Pro Text'),

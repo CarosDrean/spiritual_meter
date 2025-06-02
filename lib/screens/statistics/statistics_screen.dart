@@ -9,6 +9,7 @@ import 'package:spiritual_meter/screens/widgets/register.dart';
 import 'package:spiritual_meter/screens/statistics/widgets/weekly_chart_fl.dart';
 import 'package:spiritual_meter/screens/statistics/widgets/monthly_calendar_view.dart';
 import 'package:spiritual_meter/screens/widgets/app_section_card.dart';
+import 'package:spiritual_meter/screens/widgets/scroll_section.dart';
 
 class StatisticsScreen extends StatefulWidget {
   const StatisticsScreen({super.key});
@@ -40,7 +41,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
         return Scaffold(
           appBar: AppBar(title: const Text('Estadísticas')),
-          body: SingleChildScrollView(
+          body: ScrollSection(
             child: Column(
               children: [
                 AppSectionCard(

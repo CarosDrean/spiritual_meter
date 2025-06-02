@@ -7,6 +7,7 @@ import 'package:spiritual_meter/screens/home/widgets/prayer_gauge.dart';
 import 'package:spiritual_meter/screens/home/widgets/timer_dialog.dart';
 import 'package:spiritual_meter/screens/widgets/app_section_card.dart';
 import 'package:spiritual_meter/screens/widgets/register.dart';
+import 'package:spiritual_meter/screens/widgets/scroll_section.dart';
 
 import 'home_viewmodel.dart';
 
@@ -115,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       builder: (context, model, child) {
         return Scaffold(
           appBar: AppBar(title: const Text(kAppName)),
-          body: SingleChildScrollView(
+          body: ScrollSection(
             child: Column(
               children: [
                 AppSectionCard(
@@ -125,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     children: [
                       PrayerGauge(
                         prayerTimeInSeconds:
-                            model.todayPrayerDuration.inSeconds,
+                        model.todayPrayerDuration.inSeconds,
                       ),
                       const SizedBox(height: 30),
                       Container(

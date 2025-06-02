@@ -64,7 +64,7 @@ class _RecordScreenState extends State<RecordScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16.0,
-                    vertical: 8.0,
+                    vertical: 6.0,
                   ),
                   child: Text(
                     viewModel.capitalize(dateHeaderFormat.format(date)),
@@ -109,7 +109,7 @@ class _RecordScreenState extends State<RecordScreen> {
                     child: SizedBox(
                       width: double.infinity,
                       child: Card(
-                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6.0),
+                        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6.0),
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
@@ -136,6 +136,7 @@ class _RecordScreenState extends State<RecordScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 12),
               ],
             );
           }).toList(),

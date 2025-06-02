@@ -63,7 +63,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             padding: const EdgeInsets.all(16.0),
             children: [
               _buildNotificationSection(
-                title: 'Oraciones',
+                title: 'Notificación Oraciones',
                 notifications: prayerNotifications,
                 primaryColor: primaryColor,
                 titleColor: titleLargeColor,
@@ -87,7 +87,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               _buildNotificationSection(
-                title: 'Lectura Bíblica',
+                title: 'Notificación Lectura Bíblica',
                 notifications: bibleNotifications,
                 primaryColor: primaryColor,
                 titleColor: titleLargeColor,
@@ -128,7 +128,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
         ...notifications.map((notification) {
           return Card(
-            margin: const EdgeInsets.symmetric(vertical: 6.0),
+            // margin: const EdgeInsets.symmetric(vertical: 6.0),
             child: ListTile(
               leading: Icon(
                 notification.type == kActivityTypePrayer
@@ -142,17 +142,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: notification.isEnabled ? titleColor : bodyColor,
-                ),
-              ),
-              subtitle: Text(
-                notification.type == kActivityTypePrayer
-                    ? 'Oración'
-                    : 'Lectura Bíblica',
-                style: TextStyle(
-                  color:
-                      notification.isEnabled
-                          ? bodyColor
-                          : bodyColor.withAlpha(77),
                 ),
               ),
               trailing: Switch(
