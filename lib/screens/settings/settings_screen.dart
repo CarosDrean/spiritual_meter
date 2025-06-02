@@ -51,11 +51,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
 
         final prayerNotifications =
-        notifications.where((n) => n.type == kActivityTypePrayer).toList();
+            notifications.where((n) => n.type == kActivityTypePrayer).toList();
         final bibleNotifications =
-        notifications
-            .where((n) => n.type == kActivityTypeBibleReading)
-            .toList();
+            notifications
+                .where((n) => n.type == kActivityTypeBibleReading)
+                .toList();
 
         return Scaffold(
           appBar: AppBar(title: const Text('Configuración')),
@@ -69,6 +69,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 titleColor: titleLargeColor,
                 bodyColor: bodySmallColor,
                 textTheme: textTheme,
+                customHeaderWidget: Container(
+                  padding: const EdgeInsets.all(12.0),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: Theme.of(context).dividerColor,
+                    ),
+                  ),
+                  child: Text(
+                    "...se arrodillaba tres veces al día, y oraba y daba gracias delante de su Dios...\nDaniel 6:10",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
               _buildNotificationSection(
                 title: 'Lectura Bíblica',
@@ -92,6 +108,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required Color titleColor,
     required Color bodyColor,
     required TextTheme textTheme,
+    Widget? customHeaderWidget,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,6 +123,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
         ),
+        if (customHeaderWidget != null)
+          Column(children: [customHeaderWidget, const SizedBox(height: 16)]),
+
         ...notifications.map((notification) {
           return Card(
             margin: const EdgeInsets.symmetric(vertical: 6.0),
