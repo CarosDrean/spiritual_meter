@@ -17,7 +17,7 @@ class AppSectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

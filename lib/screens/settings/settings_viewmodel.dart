@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:spiritual_meter/core/constant.dart';
 import 'package:spiritual_meter/models/notification_setting.dart';
