@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -20,7 +20,7 @@ Future<void> _configureLocalTimezone() async {
 
   String? timeZoneName;
   try {
-    timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
+    timeZoneName = await FlutterTimezone.getLocalTimezone();
   } on PlatformException {
     timeZoneName = 'America/Lima';
   }

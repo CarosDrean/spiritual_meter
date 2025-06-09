@@ -15,6 +15,22 @@ class NotificationService {
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
 
+  static const AndroidNotificationChannel _channel = AndroidNotificationChannel(
+    'new_reminder_channel',
+    'Recordatorios',
+    description: 'Canal para notificaciones de recordatorios',
+    importance: Importance.high,
+  );
+
+  static const AndroidNotificationDetails _androidNotificationDetails =
+      AndroidNotificationDetails(
+        'new_reminder_channel',
+        'Recordatorios',
+        channelDescription: 'Canal para notificaciones de recordatorios',
+        importance: Importance.high,
+        priority: Priority.high,
+      );
+
   Future<void> init() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -39,8 +55,14 @@ class NotificationService {
           onDidReceiveBackgroundNotificationResponse,
     );
 
+    await _plugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
+        ?.createNotificationChannel(_channel);
+
     final AndroidFlutterLocalNotificationsPlugin? androidPlugin =
-        _plugin
+        await _plugin
             .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin
             >();
@@ -93,7 +115,7 @@ class NotificationService {
     await _plugin.cancel(0);
     final scheduledDate = tz.TZDateTime.now(
       tz.local,
-    ).add(Duration(milliseconds: 500));
+    ).add(Duration(seconds: 5));
 
     await _plugin.zonedSchedule(
       0,
@@ -101,6 +123,7 @@ class NotificationService {
       body,
       scheduledDate,
       const NotificationDetails(
+        android: _androidNotificationDetails,
         iOS: DarwinNotificationDetails(
           presentAlert: true,
           presentBadge: true,
@@ -143,6 +166,7 @@ class NotificationService {
       body,
       scheduledDate,
       const NotificationDetails(
+        android: _androidNotificationDetails,
         iOS: DarwinNotificationDetails(
           presentAlert: true,
           presentBadge: true,
