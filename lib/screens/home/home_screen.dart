@@ -43,7 +43,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.detached) {
+      // TODO: save timer in start activity
       viewModel.saveTimerState();
       if (viewModel.isPrayerOn || viewModel.isBibleReadingOn) {
         viewModel.showReminderNotification();
@@ -124,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     children: [
                       PrayerGauge(
                         prayerTimeInSeconds:
-                        model.todayPrayerDuration.inSeconds,
+                            model.todayPrayerDuration.inSeconds,
                       ),
                       const SizedBox(height: 30),
                       Container(

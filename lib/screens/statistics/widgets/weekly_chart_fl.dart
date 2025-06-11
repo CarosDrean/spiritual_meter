@@ -30,6 +30,13 @@ class PrayerReadingLineChart extends StatelessWidget {
     return '${min}m ${sec}s';
   }
 
+  double _calculateMaxY() {
+    final maxPrayer = prayerTimes.isNotEmpty ? prayerTimes.reduce((a, b) => a > b ? a : b) : 0;
+    final maxReading = readingTimes.isNotEmpty ? readingTimes.reduce((a, b) => a > b ? a : b) : 0;
+    final max = [maxPrayer, maxReading, 50].reduce((a, b) => a > b ? a : b);
+    return (max * 1.1).ceilToDouble(); // margin of 10%
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -48,7 +55,7 @@ class PrayerReadingLineChart extends StatelessWidget {
         Expanded(
           child: LineChart(
             LineChartData(
-              maxY: 70,
+              maxY: _calculateMaxY(),
               minY: 0,
               gridData: FlGridData(show: true),
               borderData: FlBorderData(show: false),

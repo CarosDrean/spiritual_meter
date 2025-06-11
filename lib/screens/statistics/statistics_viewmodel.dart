@@ -113,7 +113,8 @@ class StatisticsViewModel extends ChangeNotifier {
   }
 
   Future<void> loadTimesLast7Days() async {
-    final today = DateTime.now();
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
     final start = today.subtract(const Duration(days: 6));
     final end = DateTime(today.year, today.month, today.day, 23, 59, 59);
     final logs = await dbHelper.getActivityLogsByDateRange(start, end);

@@ -65,7 +65,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 AppSectionCard(
                   title: kStatisticsTitle,
                   content: SizedBox(
-                    height: 200,
+                    height: 220,
                     child: PrayerReadingLineChart(
                       prayerTimes: model.prayerTimesLast7Days,
                       readingTimes: model.readingTimesLast7Days,
